@@ -1,0 +1,38 @@
+{
+  "name": "prettier-plugin-abap",
+  "version": "0.0.1",
+  "description": "Prettier plugin that maps abap-cleaner formatting rules to deterministic printing.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && vitest run",
+    "lint": "prettier --check \"src/**/*.{ts,js}\" \"tests/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.{ts,js}\" \"tests/**/*.ts\""
+  },
+  "keywords": [
+    "prettier-plugin",
+    "abap",
+    "formatter"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "prettier": ">=3.0.0"
+  },
+  "dependencies": {
+    "@abaplint/core": "^2.113.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "prettier": "3.6.2",
+    "typescript": "^5.6.3",
+    "vitest": "^1.6.0"
+  }
+}

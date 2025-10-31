@@ -1,0 +1,13 @@
+CLASS lcl_any IMPLEMENTATION.
+METHOD basic.
+DO 2 TIMES.
+LOOP AT its_table ASSIGNING FIELD-SYMBOL(<ls_row>).
+IF <ls_row>-ignore = abap_true.
+" comment
+CONTINUE.
+ENDIF.
+ENDLOOP.
+ENDDO.
+ENDMETHOD.
+ENDCLASS.
+
