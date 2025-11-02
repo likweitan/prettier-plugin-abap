@@ -33,7 +33,8 @@ export const options: SupportOptions = {
   abapKeywordCase: {
     type: "choice",
     default: "upper",
-    description: "Case to apply to ABAP keywords (maps to abap-cleaner UpperAndLowerCaseRule).",
+    description:
+      "Case to apply to ABAP keywords (maps to abap-cleaner UpperAndLowerCaseRule).",
     category: "ABAP",
     choices: [
       { value: "upper", description: "Uppercase keywords" },
@@ -43,19 +44,22 @@ export const options: SupportOptions = {
   abapSpaceBeforePeriod: {
     type: "boolean",
     default: false,
-    description: "Keep a space before statement periods and chain commas (SpaceBeforePeriodRule).",
+    description:
+      "Keep a space before statement periods and chain commas (SpaceBeforePeriodRule).",
     category: "ABAP",
   },
   abapSpaceBeforeCommentSign: {
     type: "boolean",
     default: true,
-    description: "Ensure a space before inline \" comments (SpaceAroundCommentSignRule).",
+    description:
+      'Ensure a space before inline " comments (SpaceAroundCommentSignRule).',
     category: "ABAP",
   },
   abapSpaceAfterCommentSign: {
     type: "boolean",
     default: true,
-    description: "Insert a space after the \" comment sign unless it's a pseudo comment.",
+    description:
+      "Insert a space after the \" comment sign unless it's a pseudo comment.",
     category: "ABAP",
   },
   abapChainFormatting: {
@@ -65,7 +69,10 @@ export const options: SupportOptions = {
     category: "ABAP",
     choices: [
       { value: "preserve", description: "Keep colon chains as-is" },
-      { value: "expand", description: "Expand colon chains into separate statements" },
+      {
+        value: "expand",
+        description: "Expand colon chains into separate statements",
+      },
     ],
   },
 };

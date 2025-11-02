@@ -83,7 +83,7 @@ function matches(type: unknown, constructors: readonly Function[]): boolean {
  * Computes indentation depth (in logical levels) for every statement node.
  */
 export function computeIndentationLevels(
-  statements: readonly StatementNode[]
+  statements: readonly StatementNode[],
 ): number[] {
   const result: number[] = [];
   let depth = 0;
@@ -148,7 +148,7 @@ function isStandaloneComment(statement: StatementNode): boolean {
 function findAlignmentTarget(
   statements: readonly StatementNode[],
   startIndex: number,
-  currentDepth: number
+  currentDepth: number,
 ): { targetIndex: number; alignDepth: number } | undefined {
   if (currentDepth <= 0) {
     return undefined;
@@ -195,7 +195,7 @@ function findAlignmentTarget(
 
 function hasBlankLineAbove(
   statement: StatementNode,
-  previous?: StatementNode
+  previous?: StatementNode,
 ): boolean {
   if (!previous) {
     return false;

@@ -21,13 +21,19 @@
     "abap",
     "formatter"
   ],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/likweitan/prettier-plugin-abap.git"
+  },
+  "homepage": "https://github.com/likweitan/prettier-plugin-abap#readme",
+  "author": "likweitan",
   "license": "MIT",
   "peerDependencies": {
     "prettier": ">=3.0.0"
   },
   "dependencies": {
-    "@abaplint/core": "^2.113.0"
+    "@abaplint/core": "^2.113.0",
+    "prettier-plugin-abap": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",

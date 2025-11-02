@@ -4,12 +4,12 @@ import { ArtifactsABAP } from "@abaplint/core";
 import type { AbapToken, AbapPluginOptions } from "../parsers/types.js";
 
 const KEYWORDS = new Set<string>(
-  ArtifactsABAP.getKeywords().map((kw) => kw.word.toUpperCase())
+  ArtifactsABAP.getKeywords().map((kw) => kw.word.toUpperCase()),
 );
 
 export function applyKeywordCase(
   token: AbapToken,
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): string {
   const target = options.abapKeywordCase ?? "upper";
 

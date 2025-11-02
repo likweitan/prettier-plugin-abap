@@ -25,9 +25,21 @@ interface TestCase {
 
 const cases: TestCase[] = [
   { name: "basic", description: "indents nested blocks and loops" },
-  { name: "comment-alignment", description: "aligns comments with following middle keywords when separated by a blank line" },
-  { name: "comment-no-alignment", description: "keeps comment indentation when no blank line precedes the comment" },
-  { name: "select-non-block", description: "does not add indentation for SELECT statements that do not require ENDSELECT" },
+  {
+    name: "comment-alignment",
+    description:
+      "aligns comments with following middle keywords when separated by a blank line",
+  },
+  {
+    name: "comment-no-alignment",
+    description:
+      "keeps comment indentation when no blank line precedes the comment",
+  },
+  {
+    name: "select-non-block",
+    description:
+      "does not add indentation for SELECT statements that do not require ENDSELECT",
+  },
 ];
 
 describe("IndentRule", () => {

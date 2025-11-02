@@ -33,4 +33,3 @@ describe("NeedlessSpacesRule", () => {
     expect(output.trim()).toEqual(expected.trim());
   });
 });
-

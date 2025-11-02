@@ -19,7 +19,7 @@ interface CommentParts {
 const postComments = new WeakMap<AbapStatement, AbapComment>();
 
 export function takePostComment(
-  statement: AbapStatement
+  statement: AbapStatement,
 ): AbapComment | undefined {
   const comment = postComments.get(statement);
   if (comment) {
@@ -69,7 +69,7 @@ export function applyClosingBracketsPosition(statements: StatementList): void {
  * Returns true if at least one bracket/period was moved.
  */
 export function adjustClosingBracketsInTokens(
-  tokens: AbapToken[] | undefined
+  tokens: AbapToken[] | undefined,
 ): boolean {
   if (!tokens || tokens.length < 2) {
     return false;
@@ -91,9 +91,7 @@ export function adjustClosingBracketsInTokens(
     const isPeriod = currentText === PERIOD;
     const shouldMoveBracket = isClosingBracket && shouldAttach(previous);
     const shouldMovePeriod =
-      isPeriod &&
-      shouldAttach(previous) &&
-      CLOSING_TOKENS.has(previousText);
+      isPeriod && shouldAttach(previous) && CLOSING_TOKENS.has(previousText);
 
     if (!shouldMoveBracket && !shouldMovePeriod) {
       continue;
@@ -164,7 +162,7 @@ function shouldKeepTogether(next: AbapToken): boolean {
 
 function mergeTrailingComments(
   statements: StatementList,
-  touched: WeakSet<AbapStatement>
+  touched: WeakSet<AbapStatement>,
 ): void {
   for (let i = 0; i < statements.length - 1; i += 1) {
     const current = statements[i];

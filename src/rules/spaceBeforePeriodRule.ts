@@ -8,7 +8,7 @@ const PUNCTUATION_TO_TRIM = new Set([".", ","]);
 export function needsSpaceBefore(
   current: AbapToken,
   previous: AbapToken | undefined,
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): boolean {
   if (!previous) {
     return false;

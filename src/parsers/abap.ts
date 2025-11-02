@@ -31,7 +31,7 @@ const DEFAULT_FILENAME = "stdin.prog.abap";
 
 export function parseAbap(
   source: string,
-  options: AbapParserOptions
+  options: AbapParserOptions,
 ): AbapProgram {
   const text = normalizeNewlines(source);
   const filename = inferFilename(options.filepath);
@@ -46,7 +46,7 @@ export function parseAbap(
     const object = registry.getFirstObject();
     if (!object || !ABAPObject.is(object)) {
       console.warn(
-        `[prettier-plugin-abap] Falling back to raw text: no ABAP object for ${filename}`
+        `[prettier-plugin-abap] Falling back to raw text: no ABAP object for ${filename}`,
       );
       return buildFallbackAst(text, filename, hash, lineOffsets);
     }
@@ -54,7 +54,7 @@ export function parseAbap(
     const abapFile = object.getABAPFiles()[0];
     if (!abapFile) {
       console.warn(
-        `[prettier-plugin-abap] Falling back to raw text: no ABAP file for ${filename}`
+        `[prettier-plugin-abap] Falling back to raw text: no ABAP file for ${filename}`,
       );
       return buildFallbackAst(text, filename, hash, lineOffsets);
     }
@@ -65,7 +65,7 @@ export function parseAbap(
     const normalizedStatements = convertStatements(
       statements,
       indentLevels,
-      lineOffsets
+      lineOffsets,
     );
 
     const lines = text.split("\n");
@@ -94,7 +94,7 @@ export function parseAbap(
   } catch (error) {
     console.warn(
       `[prettier-plugin-abap] Falling back to raw text after parse error in ${filename}:`,
-      error
+      error,
     );
     return buildFallbackAst(text, filename, hash, lineOffsets);
   }
@@ -136,7 +136,7 @@ function inferFilename(filepath: string | undefined): string {
 function convertStatements(
   statements: readonly StatementNode[],
   indentLevels: number[],
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapStatement[] {
   const result: AbapStatement[] = [];
   let index = 0;
@@ -185,7 +185,7 @@ function convertStatements(
       const chainStatement = convertColonGroup(
         group,
         indentLevels[index] ?? 0,
-        lineOffsets
+        lineOffsets,
       );
       result.push(chainStatement);
       index = cursor;
@@ -195,7 +195,7 @@ function convertStatements(
     const converted = convertSingleStatement(
       statement,
       indentLevels[index] ?? 0,
-      lineOffsets
+      lineOffsets,
     );
 
     if (pendingTrailing) {
@@ -213,13 +213,13 @@ function convertStatements(
 function convertSingleStatement(
   statement: StatementNode,
   indentLevel: number,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapStatement {
   const convertedTokens = convertTokens(statement.getTokens(), lineOffsets);
   const pragmaTokens = convertPragmas(statement, lineOffsets);
   const tokensWithPragmas = mergeTokensWithPragmas(
     convertedTokens,
-    pragmaTokens
+    pragmaTokens,
   );
   const trailingComment = extractTrailingComment(tokensWithPragmas);
 
@@ -231,14 +231,14 @@ function convertSingleStatement(
     trailingComment,
     undefined,
     statement,
-    pragmaTokens
+    pragmaTokens,
   );
 }
 
 function convertColonGroup(
   group: readonly StatementNode[],
   indentLevel: number,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapStatement {
   if (group.length === 0) {
     throw new Error("convertColonGroup called with empty group");
@@ -323,7 +323,7 @@ function convertColonGroup(
   };
 
   const allTokens = entries.flatMap((entry) =>
-    entry.type === "entry" ? (entry.tokens ?? []) : []
+    entry.type === "entry" ? (entry.tokens ?? []) : [],
   );
 
   const trailingComment =
@@ -339,7 +339,7 @@ function convertColonGroup(
     trailingComment,
     chain,
     lastStatementWithTokens,
-    chainPragmas
+    chainPragmas,
   );
 }
 
@@ -351,12 +351,12 @@ function buildStatementObject(
   trailingComment?: AbapComment,
   chain?: AbapChain,
   endStatement: StatementNode = statement,
-  pragmas: AbapToken[] = []
+  pragmas: AbapToken[] = [],
 ): AbapStatement {
   const loc = calcStatementLocation(
     statement.getTokens(),
     lineOffsets,
-    endStatement.getTokens()
+    endStatement.getTokens(),
   );
 
   return {
@@ -375,7 +375,7 @@ function buildStatementObject(
 
 function convertTokens(
   tokens: readonly AbstractToken[],
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapToken[] {
   const result: AbapToken[] = [];
   for (let index = 0; index < tokens.length; index++) {
@@ -396,7 +396,7 @@ function getEntryStartLine(entry: AbapChainEntry): number {
 
 function convertPragmas(
   statement: StatementNode,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapToken[] {
   const pragmas = statement.getPragmas();
   const result: AbapToken[] = [];
@@ -408,7 +408,7 @@ function convertPragmas(
 
 function mergeTokensWithPragmas(
   tokens: AbapToken[],
-  pragmas: AbapToken[]
+  pragmas: AbapToken[],
 ): AbapToken[] {
   if (pragmas.length === 0) {
     return tokens;
@@ -432,7 +432,7 @@ function mergeTokensWithPragmas(
 function convertToken(
   token: AbstractToken,
   next: AbstractToken | undefined,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapToken {
   const tokenLoc = calcLocation(token.getStart(), token.getEnd(), lineOffsets);
   const hasBreak = next ? isNewLineBetween(token, next) : false;
@@ -451,7 +451,7 @@ function convertToken(
 
 function convertCommentNode(
   statement: StatementNode,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapComment {
   const token = statement.getTokens()[0];
   const loc = calcLocation(token.getStart(), token.getEnd(), lineOffsets);
@@ -493,7 +493,7 @@ function extractTrailingComment(tokens: AbapToken[]): AbapComment | undefined {
 function calcStatementLocation(
   startTokens: readonly AbstractToken[],
   lineOffsets: number[],
-  endTokens: readonly AbstractToken[] = startTokens
+  endTokens: readonly AbstractToken[] = startTokens,
 ): SourceLocation {
   if (startTokens.length === 0 || endTokens.length === 0) {
     return {
@@ -514,7 +514,7 @@ function calcStatementLocation(
 function calcLocation(
   start: Position | VirtualPosition,
   end: Position | VirtualPosition,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): SourceLocation {
   const startOffset = positionToOffset(start, lineOffsets);
   const endOffset = positionToOffset(end, lineOffsets);
@@ -530,7 +530,7 @@ function calcLocation(
 
 function positionToOffset(
   pos: Position | VirtualPosition,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): number {
   const row = Math.max(pos.getRow(), 1);
   const col = Math.max(pos.getCol(), 1);
@@ -594,7 +594,7 @@ function buildFallbackAst(
   text: string,
   filename: string,
   hash: string,
-  lineOffsets: number[]
+  lineOffsets: number[],
 ): AbapProgram {
   const lines = text.split("\n");
   const statements: AbapStatement[] = lines.map((line, index) => {

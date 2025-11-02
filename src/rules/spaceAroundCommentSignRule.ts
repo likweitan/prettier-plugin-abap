@@ -10,7 +10,7 @@ function isLetterOrDigit(char: string): boolean {
 
 export function formatCommentValue(
   rawValue: string,
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): string {
   if (options.abapSpaceAfterCommentSign === false) {
     return rawValue;
@@ -39,7 +39,7 @@ export function formatCommentValue(
 }
 
 export function needsSpaceBeforeCommentSign(
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): boolean {
   return options.abapSpaceBeforeCommentSign !== false;
 }

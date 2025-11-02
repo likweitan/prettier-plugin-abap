@@ -96,7 +96,7 @@ function printProgram(path: any, print: any): Doc {
 
 function printStatement(
   statement: AbapStatement,
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): Doc {
   if (statement.tokens.length === 0 && !statement.trailingComment) {
     return "";
@@ -133,7 +133,7 @@ function printStatement(
     if (atLineStart) {
       const relativeIndent = Math.max(
         0,
-        token.loc.startColumn - statement.loc.startColumn
+        token.loc.startColumn - statement.loc.startColumn,
       );
       if (relativeIndent > 0) {
         currentLine += " ".repeat(relativeIndent);
@@ -208,14 +208,10 @@ function printStatement(
     const targetIndex = lineMetas.findIndex(
       (meta) =>
         comment.loc.startLine >= meta.startLine &&
-        comment.loc.startLine <= meta.endLine
+        comment.loc.startLine <= meta.endLine,
     );
     if (targetIndex >= 0) {
-      lines[targetIndex] = appendComment(
-        lines[targetIndex],
-        comment,
-        options
-      );
+      lines[targetIndex] = appendComment(lines[targetIndex], comment, options);
     } else if (lines.length > 0) {
       const lastIndex = lines.length - 1;
       lines[lastIndex] = appendComment(lines[lastIndex], comment, options);
@@ -229,11 +225,7 @@ function printStatement(
       lines.push(formatCommentValue(postComment.value.trimStart(), options));
     } else {
       const lastIndex = lines.length - 1;
-      lines[lastIndex] = appendComment(
-        lines[lastIndex],
-        postComment,
-        options
-      );
+      lines[lastIndex] = appendComment(lines[lastIndex], postComment, options);
     }
   }
 
@@ -242,7 +234,7 @@ function printStatement(
 
 function printChainStatement(
   statement: AbapStatement,
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): Doc {
   const { chain } = statement;
   if (!chain) {
@@ -287,11 +279,11 @@ function printChainStatement(
       }
     } else if (entry.type === "comment" && entry.comment) {
       const commentIndent = " ".repeat(
-        Math.max(0, entry.comment.loc.startColumn)
+        Math.max(0, entry.comment.loc.startColumn),
       );
       lines.push(
         commentIndent +
-          formatCommentValue(entry.comment.value.trimStart(), options)
+          formatCommentValue(entry.comment.value.trimStart(), options),
       );
     }
   }
@@ -302,8 +294,7 @@ function printChainStatement(
 
   for (let i = 1; i < lines.length; i++) {
     if (/^[\s]*[.,]/.test(lines[i])) {
-      const merged =
-        lines[i - 1].replace(/[\s]*$/, "") + lines[i].trimStart();
+      const merged = lines[i - 1].replace(/[\s]*$/, "") + lines[i].trimStart();
       lines.splice(i - 1, 2, merged);
       i--;
     }
@@ -315,7 +306,7 @@ function printChainStatement(
 function appendComment(
   line: string,
   comment: AbapComment | undefined,
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): string {
   if (!comment) {
     return line;
@@ -342,7 +333,7 @@ function shouldInlineFirstEntry(keyword: AbapToken): boolean {
 
 function renderTokenSequence(
   tokens: AbapToken[],
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): string {
   let result = "";
   let previous: AbapToken | undefined;
@@ -385,7 +376,7 @@ function renderToken(token: AbapToken, options: AbapPluginOptions): string {
 function getSpacesBeforeToken(
   token: AbapToken,
   previous: AbapToken | undefined,
-  options: AbapPluginOptions
+  options: AbapPluginOptions,
 ): number {
   const minSpaces = needsSpaceBefore(token, previous, options) ? 1 : 0;
 
@@ -403,12 +394,14 @@ function getSpacesBeforeToken(
 }
 
 function isPunctuationToken(token: AbapToken): boolean {
-  return token.role === "punctuation" || token.text === "," || token.text === ".";
+  return (
+    token.role === "punctuation" || token.text === "," || token.text === "."
+  );
 }
 
 function computeOriginalSpaces(
   token: AbapToken,
-  previous: AbapToken | undefined
+  previous: AbapToken | undefined,
 ): number {
   if (!token.loc) {
     return 0;

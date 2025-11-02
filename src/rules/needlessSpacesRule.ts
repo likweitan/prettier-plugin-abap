@@ -55,7 +55,7 @@ interface TokenPos {
 export type NeedlessSpacesOverrides = WeakMap<AbapToken, number>;
 
 export function computeNeedlessSpacesOverrides(
-  statements: readonly AbapStatement[]
+  statements: readonly AbapStatement[],
 ): NeedlessSpacesOverrides {
   const overrides: NeedlessSpacesOverrides = new WeakMap();
   const tokensOfXPos = new Map<number, TokenPos[]>();
@@ -67,14 +67,16 @@ export function computeNeedlessSpacesOverrides(
     statements,
     tokensOfXPos,
     firstTokenOfLine,
-    allTokenPositions
+    allTokenPositions,
   );
   if (tokensOfXPos.size === 0) {
     return overrides;
   }
 
   const processedTokens = new WeakSet<AbapToken>();
-  const sortedXPositions = Array.from(tokensOfXPos.keys()).sort((a, b) => a - b);
+  const sortedXPositions = Array.from(tokensOfXPos.keys()).sort(
+    (a, b) => a - b,
+  );
 
   for (let index = sortedXPositions.length - 1; index >= 0; index -= 1) {
     const xPosKey = sortedXPositions[index];
@@ -112,7 +114,7 @@ export function computeNeedlessSpacesOverrides(
             prevTokenPos,
             testTokenPos,
             realXPos,
-            firstTokenOfLine
+            firstTokenOfLine,
           )
         ) {
           break;
@@ -129,7 +131,7 @@ export function computeNeedlessSpacesOverrides(
           isSpecialAlignment,
           processedTokens,
           overrides,
-          groupedTokens
+          groupedTokens,
         );
       }
 
@@ -156,7 +158,7 @@ function collectTokenPositions(
   statements: readonly AbapStatement[],
   tokensOfXPos: Map<number, TokenPos[]>,
   firstTokenOfLine: Map<number, TokenPos>,
-  collectedTokens: TokenPos[]
+  collectedTokens: TokenPos[],
 ): void {
   let commandNumber = 0;
 
@@ -166,7 +168,7 @@ function collectTokenPositions(
       commandNumber,
       tokensOfXPos,
       firstTokenOfLine,
-      collectedTokens
+      collectedTokens,
     );
 
     if (statement.chain) {
@@ -177,7 +179,7 @@ function collectTokenPositions(
             commandNumber,
             tokensOfXPos,
             firstTokenOfLine,
-            collectedTokens
+            collectedTokens,
           );
         }
       }
@@ -189,7 +191,7 @@ function collectTokenPositions(
 
 function applyEmptyBracketOverrides(
   statements: readonly AbapStatement[],
-  overrides: NeedlessSpacesOverrides
+  overrides: NeedlessSpacesOverrides,
 ): void {
   for (const statement of statements) {
     applyEmptyBracketOverridesToTokens(statement.tokens ?? [], overrides);
@@ -205,7 +207,7 @@ function applyEmptyBracketOverrides(
 
 function applyEmptyBracketOverridesToTokens(
   tokens: readonly AbapToken[],
-  overrides: NeedlessSpacesOverrides
+  overrides: NeedlessSpacesOverrides,
 ): void {
   for (let index = 0; index < tokens.length - 1; index += 1) {
     const current = tokens[index];
@@ -230,15 +232,13 @@ function applyEmptyBracketOverridesToTokens(
 }
 
 function isMatchingBracketPair(open: string, close: string): boolean {
-  return (
-    (open === "(" && close === ")") || (open === "[" && close === "]")
-  );
+  return (open === "(" && close === ")") || (open === "[" && close === "]");
 }
 
 function condenseStandaloneTokens(
   tokenPositions: readonly TokenPos[],
   groupedTokens: WeakSet<AbapToken>,
-  overrides: NeedlessSpacesOverrides
+  overrides: NeedlessSpacesOverrides,
 ): void {
   for (const tokenPos of tokenPositions) {
     if (tokenPos.isFirstInLine) {
@@ -271,7 +271,7 @@ function collectFromTokens(
   commandNumber: number,
   tokensOfXPos: Map<number, TokenPos[]>,
   firstTokenOfLine: Map<number, TokenPos>,
-  collectedTokens: TokenPos[]
+  collectedTokens: TokenPos[],
 ): void {
   let previous: TokenPos | undefined;
 
@@ -284,11 +284,13 @@ function collectFromTokens(
     const startColumn = Math.max(0, token.loc.startColumn ?? 0);
     const endColumn = Math.max(
       startColumn,
-      token.loc.endColumn ?? startColumn + token.text.length
+      token.loc.endColumn ?? startColumn + token.text.length,
     );
     const lineNumber = token.loc.startLine ?? 0;
     const isNewLine =
-      !previous || previous.lineNumber !== lineNumber || previous.token === undefined;
+      !previous ||
+      previous.lineNumber !== lineNumber ||
+      previous.token === undefined;
     let prevEndColumn: number;
     let spacesLeft: number;
     if (isNewLine || !previous) {
@@ -341,7 +343,7 @@ function collectFromTokens(
 function addTokenPos(
   tokensOfXPos: Map<number, TokenPos[]>,
   tokenPos: TokenPos,
-  key: number
+  key: number,
 ): void {
   const list = tokensOfXPos.get(key);
   if (list) {
@@ -356,7 +358,7 @@ function tokenBreaksSequence(
   prevTokenPos: TokenPos,
   testTokenPos: TokenPos,
   xPos: number,
-  firstTokenOfLine: Map<number, TokenPos>
+  firstTokenOfLine: Map<number, TokenPos>,
 ): boolean {
   if (
     firstTokenPos.tokenType !== "COMMENT" &&
@@ -429,7 +431,7 @@ function processSequence(
   isSpecialAlignment: boolean,
   processedTokens: WeakSet<AbapToken>,
   overrides: NeedlessSpacesOverrides,
-  groupedTokens: WeakSet<AbapToken>
+  groupedTokens: WeakSet<AbapToken>,
 ): void {
   if (endIndex - startIndex < 2) {
     return;
@@ -451,7 +453,7 @@ function processSequence(
       if (!testTokenPos.isFirstInLine) {
         maxPrevEndColumn = Math.max(
           maxPrevEndColumn,
-          testTokenPos.prevEndColumn
+          testTokenPos.prevEndColumn,
         );
       }
       if (testTokenPos.startIndexInLine !== firstTokenPos.startIndexInLine) {
